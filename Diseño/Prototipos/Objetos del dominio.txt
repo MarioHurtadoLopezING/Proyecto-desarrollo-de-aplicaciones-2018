@@ -1,0 +1,60 @@
+usuario
+- idUsuario : int
+- nombreUsuario : String
+- contraseña : string
+- idTipoUsuario : int
++ buscarUsuario() : boolean
++ buscarUsuario() : Usuario
++obtenerProfesor(idUsuario) : profesor
+
+alumno
+- id : int
+- nombre : string
+- correo : string
+- matricula : string
+- numeroTelefonico: string
++ registrarAlumno() : boolean
++ eliminarAlumno() :boolean
++ editarAlumno(int idAlumno) : boolean
++ obtenerAlumnos(int idCurso) : list<alumno>
+
+curso
+- id : int
+- listaAlumnos : list<Alumno>
+-  nombreCurso : String
+- periodo : string
++ agregarCurso()
++eliminarCurso()
++ inscribirAlumno(Alumno alumno)
++ editarCurso(int idCurso)
++ obtenerCursos (int idProfesor) : list<curso>
+
+profesor
+- id : int
+- nombre : string
+- correo : string
++ agregarProfesor()
++ editarProfesor(int idProfesor)
++ eliminarProfesor()
++ obtenerProfesores() list<Profesor>
+
+
+actividad
+- id : int
+- nombre : String
+- descripcion : string
+- fechaInicio : date
+- fechafin : date
+- porcentaje : int
+- tipoActividad : string
++ registrarActividad(int idAlumno, int porcentaje)
++ editarActividad()
++ eliminarActiviad(int idActividad)
++ agregarActividad()
+
+asistencia
+fecha: date
+alumnos : list
++ registrarAsistencia()
++ obtenerAsistencias(int idAlumno)
++ obtenerAsistencias(Date)
