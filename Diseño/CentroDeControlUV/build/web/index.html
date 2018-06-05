@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="CSS/bootstrap.css"/>
+        <script src="CSS/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" href="CSS/estilos.css"/>
+        <title>Inicio de sesión</title>
+    </head>
+    <body>
+        <section id="cover">
+            <div id="cover-texto">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h1 class="display-1"> Universidad Veracruzana</h1>
+                            <!--inicio de un container -->
+                            <div class="container">
+                                <div class="row justify-content-around">
+
+                                    <div class="col">
+                                        <!--Carrusel de imagenes -->
+                                        <section id="logo"> 
+                                            <img class="d-block w-75" src="RecursosGraficos/logo.jpg" alt="First slide">
+                                        </section>
+                                        <!--aqui termina carrusel-->
+                                    </div>
+                                    <div class="col">
+                                        <!--fin de container-->
+                                        <form action="" class="form-group">
+                                            <!--aqui empieza form-inline-->
+                                            <div class="form-group">
+                                                <label>Usuario</label>
+                                                <input type="text" class="form-control" id="txtUsuario" placeholder="Usuario">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Contraseña</label>
+                                                <input type="password" class="form-control" id="txtContrasena" placeholder="Contraseña">
+                                            </div>
+                                            <button type="button" class="btn btn-primary" onclick="iniciarSesion();">iniciar sesión</button>
+                                            <script>
+                                                function iniciarSesion() {
+                                                    var usuario = document.getElementById("txtUsuario").value;
+                                                    var contrasena = document.getElementById("txtContrasena").value;
+                                                    var link = 'http://localhost:8080/AccesoBD2018/webresources/modelo.usuario/login/' + usuario + '/' + contrasena;
+                                                    $.ajax({
+                                                        url: link,
+                                                        type: 'GET',
+                                                        cache: false,
+                                                        dataType: 'json',
+                                                        processData: false,
+                                                        contentType: false,
+                                                        success: function (data, textStatus, jqXHR) {
+                                                            var id = data["idUsuario"];
+                                                            var foranea = data["idProfesor"];
+                                                            var nombre = foranea["idProfesor"];
+                                                            location.href = "PaginaPrincipal.html?var=" + nombre+"&"+"var2="+id;
+                                                        },
+                                                        error: function (jqXHR, textStatus, errorThrown) {
+                                                            $("#exampleModal").modal("show");
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+                                            <!-- Button trigger modal -->
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Usuario y/o contraseña incorrectos</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Datos incorrectos, verifique sus credenciales
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </section>
+        <script src="CSS/bootstrap.js"></script>
+    </body>
+</html>

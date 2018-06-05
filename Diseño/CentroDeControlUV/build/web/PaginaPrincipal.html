@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="CSS/bootstrap.css"/>
+        <script src="CSS/bootstrap.js"></script>
+        <script src="CSS/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" href="CSS/estilos.css"/>
+        <title>Inicio</title>
+    </head>
+    <body onload="cargarDatos()">
+        <div>
+            <section id="contenedorPrincipal">
+                <div id="cover-texto">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <h4 style="text-align: center" class="display-4"> Menú principal<br></h4>
+                                <div><br><br></div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="col-sm-11">
+                                <div class="row justify-content-around">
+                                    <!---->
+                                    <div class="col">
+                                        <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                            <div class="card-header"><h1>Profesores</h1></div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"><center><img onclick="paginaProfesores()" class="d-block w-25" src="RecursosGraficos/profesor.png"></center></h5>
+                                                <script>
+                                                    function paginaProfesores(){
+                                                        location.href = "paginaProfesores.html";
+                                                    }
+                                                    function paginaAlumnos(){
+                                                        location.href = "paginaAlumnos.html";
+                                                    }
+                                                </script>
+                                                <p class="card-text">Registro, modificación y edición de profesores de la facultad de estadística e informática.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+                                            <div class="card-header"><h1>Cursos</h1></div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"><center><img onclick="paginaCursos()" class="d-block w-25" src="RecursosGraficos/presentacion.png"></center></h5>
+                                                <p class="card-text">Registro, modificación y edicion de cursos asi como asignaciones de estudiantes.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+                                            <div class="card-header"><h1>Alumnos</h1></div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"><center><img onclick="paginaAlumnos()" class="d-block w-25" src="RecursosGraficos/estudiante.png"></center></h5>
+                                                <p class="card-text">Registro y edición de estudiantes de la facultad de estadística e informática.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!---->
+                                </div>
+
+                                <div class="row justify-content-around">
+                                    <div class="col">
+                                        <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+                                            <div class="card-header"><h1>Mi cuenta</h1></div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"><center><img onclick="modificarCuentaUsuario()" class="d-block w-25" src="RecursosGraficos/obrero.png"></center></h5>
+                                                <p class="card-text">Registro, modificación y edición de profesores de la facultad de estadística e informática.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
+                                            <div class="card-header"><h1>Actividades</h1></div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"><center><img class="d-block w-25" src="RecursosGraficos/calculadora.png"></center></h5>
+                                                <p class="card-text">Registro, modificación y edicion de grupos asi como asignaciones de estudiantes.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+                                            <div class="card-header"><h1>Acerca de...</h1></div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"><center><img class="d-block w-25" src="RecursosGraficos/globo.png"></center></h5>
+                                                <p class="card-text">Registro y edición de estudiantes de la facultad de estadística e informática.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <script>
+            var profesor = 0;
+            function editarCuenta() {
+                var nombreUsuario = document.getElementById("txtUsuario").value;
+                var nuevaContrasena = document.getElementById("txtContrasena").value;
+                var confirmar = document.getElementById("txtConfirmar").value;
+                if (nuevaContrasena == confirmar) {
+                    var data = {"idUsuario": idUsuario, "usuario": nombreUsuario, "contrasena": nuevaContrasena,
+                        "idProfesor": profesor};
+                    $.ajax({
+                        url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.usuario/' + idUsuario,
+                        type: 'PUT',
+                        data: JSON.stringify(data),
+                        cache: false,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (data, textStatus, jqXHR) {
+                            alert("exito al guardar edicion");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('ERRORS: ' + textStatus + " - " + errorThrown);
+                        }
+                    });
+                }else{
+                    alert("contraseñas no coinciden");
+                }
+            }
+            function modificarCuentaUsuario() {
+                var usuario = document.getElementById("txtUsuario").value;
+                var contrasena = document.getElementById("txtContrasena").value;
+                var link = 'http://localhost:8080/AccesoBD2018/webresources/modelo.usuario/' + idUsuario;
+                $.ajax({
+                    url: link,
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data, textStatus, jqXHR) {
+                        $("#txtUsuario").val(data["usuario"]);
+                        $("#txtContrasena").val(data["contrasena"]);
+                        $("#ventanaModificarCuenta").modal("show");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                });
+            }
+            function cargarDatos() {
+                var link = 'http://localhost:8080/AccesoBD2018/webresources/modelo.profesor/' + getId();
+                $.ajax({
+                    url: link,
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data, textStatus, jqXHR) {
+                        profesor = data;
+                        console.log(data);
+                        var nombre = data["nombre"];
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('no se han podido cargar los datos');
+                    }
+                });
+            }
+            var idUsuario = 0;
+            function getId() {
+                var url = document.location.href;
+                if (url.indexOf('?') > 0) {
+                    var getString = url.split('?')[1];
+                    var GET = getString.split('&');
+                    var tmp = GET[0].split('=');
+                    var id = unescape(decodeURI(tmp[1]));
+                    var auxiliarId = unescape(decodeURI(GET[1]));
+                    idUsuario = auxiliarId.split('=')[1];
+
+                    console.log(idUsuario);
+                }
+                console.log(id);
+                return id;
+            }
+            function paginaCursos() {
+                location.href = "paginaCursos.html?var=" + getId();
+            }
+        </script>
+        <div class="modal fade" id="ventanaModificarCuenta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modificar cuenta</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Usuario:</label>
+                                <input type="text" class="form-control" id="txtUsuario">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Contraseña:</label>
+                                <input type="password" class="form-control" id="txtContrasena">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Confirmar:</label>
+                                <input type="password" class="form-control" id="txtConfirmar">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="editarCuenta()">Aceptar</button>
+                    </div>
+                </div>
+            </div><!--hacer un combo para seleccionar un profesor y de este recuperar el objeto para obtener el id-->
+        </div>
+    </body>
+    <script src="CSS/bootstrap.js"></script>
+</html>
+<!--
+https://www.lawebdelprogramador.com/codigo/JavaScript/2529-Obtener-las-variables-pasadas-por-la-url-en-javascript.html
+-->

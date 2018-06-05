@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="CSS/bootstrap.css"/>
+        <script src="CSS/bootstrap.js"></script>
+        <script src="CSS/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" href="CSS/estilos.css"/>
+        <title>alumnos</title>
+    </head>
+    <body onload="cargarDatos()">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Profesores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Cursos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Alumnos</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-11">
+                    <h4 style="text-align: center" class="display-4">Registro de alumnos<br></h4>
+                    <div><br><br></div>
+                </div>
+            </div>
+            <table id="tablaAlumnos" class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Matricula</th>
+                        <th scope="col"></th>
+                        <th scope="col"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-sm btn-primary" onclick="nuevoAlumno()">Agregar alumno</button>
+        </div>
+        <script>
+            function cargarDatos() {
+                $("#tablaAlumnos tbody").find('tr')
+                        .remove()
+                        .end();
+                $.ajax({
+                    async: false,
+                    url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.alumno',
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data, textStatus, jqXHR) {
+                        $.each(data, function (i, alumno) {
+                            cadHTML = "<tr>";
+                            cadHTML += "<td>" + alumno["nombre"] + "</td>";
+                            cadHTML += "<td>" + alumno["correo"] + "</td>";
+                            cadHTML += "<td>" + alumno["matricula"] + "</td>";
+                            cadHTML += "<td><button type='button' class='btn btn-success' onclick=' mostrarDatosAlumno(" +  alumno["idAlumno"] + ");'>editar</button></td>";
+                            cadHTML += "<td><button type='button' class='btn btn-danger' onclick=' eliminarAlumno(" + alumno["idAlumno"] + ");'>eliminar</button></td>";
+                            cadHTML += "</tr>";
+                            $("#tablaAlumnos").append(cadHTML);
+                        });
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error al cargar los datos");
+                    }
+                });
+            }
+            var idAlumno = 0;
+            var nuevo = false;
+            function nuevoAlumno(){
+                $("#txtNombre").val("");
+                $("#txtCorreo").val("");
+                $("#txtMatricula").val("");
+                nuevo = true;
+                $("#ventanaModificarAlumno").modal("show");
+            }
+            function mostrarDatosAlumno(idalumno) {
+                $.ajax({
+                    async: false,
+                    url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.alumno/' + idalumno,
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data);
+                        idAlumno = data["idAlumno"];
+                        $("#txtNombre").val(data["nombre"]);
+                        $("#txtCorreo").val(data["correo"]);
+                        $("#txtMatricula").val(data["matricula"]);
+                        $("#ventanaModificarAlumno").modal("show");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error al cargar los datos");
+                    }
+                });
+            }
+            
+            function editarAlumno() {
+                if (!nuevo) {
+                    var nombre = document.getElementById("txtNombre").value;
+                    var correo = document.getElementById("txtCorreo").value;
+                    var matricula = document.getElementById("txtMatricula").value;
+                    var data = {"idAlumno": idAlumno, "nombre": nombre, "correo": correo,"matricula": matricula};
+                    $.ajax({
+                        url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.alumno/' + idAlumno,
+                        type: 'PUT',
+                        data: JSON.stringify(data),
+                        cache: false,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (data, textStatus, jqXHR) {
+                            alert("exito al editar");
+                            cargarDatos();
+                            $("#ventanaModificarAlumno").modal("hide");
+                            idAlumno = 0;
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('ERRORS: ' + textStatus + " - " + errorThrown);
+                        }
+                    });
+                } else {
+                    var nombre = document.getElementById("txtNombre").value;
+                    var correo = document.getElementById("txtCorreo").value;
+                    var matricula = document.getElementById("txtMatricula").value;
+                    var data = {"idAlumno": idAlumno, "nombre": nombre, "correo": correo,"matricula": matricula};
+                    $.ajax({
+                        url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.alumno',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        cache: false,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (data, textStatus, jqXHR) {
+                            alert("exito al guardar");
+                            nuevo = false;
+                            cargarDatos();
+                            $("#ventanaModificarAlumno").modal("hide");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('ERRORS: ' + textStatus + " - " + errorThrown);
+                        }
+                    });
+
+                }
+            }
+            function eliminarAlumno(idAlumno) {
+                $.ajax({
+                    url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.alumno/' + idAlumno,
+                    type: 'DELETE',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: 'application/json',
+                    success: function (data, textStatus, jqXHR) {
+                        alert("alumno eliminado");
+                        cargarDatos();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        envioexitoso = false;
+                        console.log('ERRORS: ' + textStatus + " - " + errorThrown);
+                    }
+                });
+            }
+        </script>
+        <div class="modal fade" id="ventanaModificarAlumno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modificar alumno</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Nombre:</label>
+                                <input type="text" class="form-control" id="txtNombre">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Correo:</label>
+                                <input type="text" class="form-control" id="txtCorreo">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Matricula:</label>
+                                <input type="text" class="form-control" id="txtMatricula">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="editarAlumno()">Aceptar</button>
+                    </div>
+                </div>
+            </div><!--hacer un combo para seleccionar un profesor y de este recuperar el objeto para obtener el id-->
+        </div>
+        <script src="CSS/bootstrap.js"></script>
+    </body>
+</html>

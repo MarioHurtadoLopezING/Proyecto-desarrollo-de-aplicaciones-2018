@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="CSS/bootstrap.css"/>
+        <script src="CSS/bootstrap.js"></script>
+        <script src="CSS/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" href="CSS/estilos.css"/>
+        <title>profesores</title>
+    </head>
+    <body onload="cargarDatos()">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Profesores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Cursos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Alumnos</a>
+                </li>
+            </ul>
+        </nav>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-11">
+                    <h4 style="text-align: center" class="display-4">Registro de profesores<br></h4>
+                    <div><br><br></div>
+                </div>
+            </div>
+            <table id="tablaProfesores" class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">indice</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col"></th>
+                        <th scope="col"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-sm btn-primary" onclick="agregarProfesor()">Agregar profesor</button>
+        </div>
+        <script>
+            var nuevoProfesor = false;
+            function cargarDatos() {
+                $("#tablaProfesores tbody").find('tr')
+                        .remove()
+                        .end();
+                $.ajax({
+                    async: false,
+                    url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.profesor',
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data, textStatus, jqXHR) {
+                        $.each(data, function (i, profesor) {
+                            cadHTML = "<tr>";
+                            cadHTML += "<td>" + (i + 1) + "</td>";
+                            cadHTML += "<td>" + profesor["nombre"] + "</td>";
+                            cadHTML += "<td>" + profesor["correo"] + "</td>";
+                            cadHTML += "<td><button type='button' class='btn btn-success' onclick=' mostrarDatosProfesor(" + profesor["idProfesor"] + ");'>editar</button></td>";
+                            cadHTML += "<td><button type='button' class='btn btn-danger' onclick=' eliminarProfesor(" + profesor["idProfesor"] + ");'>eliminar</button></td>";
+                            cadHTML += "</tr>";
+                            $("#tablaProfesores").append(cadHTML);
+                        });
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error al cargar los datos");
+                    }
+                });
+            }
+            function eliminarProfesor(idProfesor) {
+                $.ajax({
+                    url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.profesor/' + idProfesor,
+                    type: 'DELETE',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: 'application/json',
+                    success: function (data, textStatus, jqXHR) {
+                        alert("profesor eliminado");
+                        cargarDatos();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        envioexitoso = false;
+                        console.log('ERRORS: ' + textStatus + " - " + errorThrown);
+                    }
+                });
+            }
+            var idProfesor = 0;
+            function mostrarDatosProfesor(idprofesor) {
+                $.ajax({
+                    async: false,
+                    url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.profesor/' + idprofesor,
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data);
+                        idProfesor = data["idProfesor"];
+                        $("#txtNombre").val(data["nombre"]);
+                        $("#txtCorreo").val(data["correo"]);
+                        $("#ventanaModificarProfesor").modal("show");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error al cargar los datos");
+                    }
+                });
+            }
+            function editarProfesor() {
+                if (!nuevoProfesor) {
+                    var nombre = document.getElementById("txtNombre").value;
+                    var correo = document.getElementById("txtCorreo").value;
+                    var data = {"idProfesor": idProfesor, "nombre": nombre, "correo": correo};
+                    $.ajax({
+                        url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.profesor/' + idProfesor,
+                        type: 'PUT',
+                        data: JSON.stringify(data),
+                        cache: false,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (data, textStatus, jqXHR) {
+                            alert("exito al editar");
+                            cargarDatos();
+                            $("#ventanaModificarProfesor").modal("hide");
+                            idProfesor = 0;
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('ERRORS: ' + textStatus + " - " + errorThrown);
+                        }
+                    });
+                } else {
+                    var nombre = document.getElementById("txtNombre").value;
+                    var correo = document.getElementById("txtCorreo").value;
+                    var data = {"idProfesor": idProfesor, "nombre": nombre, "correo": correo};
+                    $.ajax({
+                        url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.profesor',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        cache: false,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (data, textStatus, jqXHR) {
+                            alert("exito al guardar");
+                            nuevoProfesor = false;
+                            cargarDatos();
+                            $("#ventanaModificarProfesor").modal("hide");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('ERRORS: ' + textStatus + " - " + errorThrown);
+                        }
+                    });
+
+                }
+            }
+            function agregarProfesor() {
+                $("#txtNombre").val("");
+                $("#txtCorreo").val("");
+                nuevoProfesor = true;
+                $("#ventanaModificarProfesor").modal("show");
+            }
+        </script>
+        <div class="modal fade" id="ventanaModificarProfesor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modificar cuenta</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Nombre:</label>
+                                <input type="text" class="form-control" id="txtNombre">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Correo:</label>
+                                <input type="text" class="form-control" id="txtCorreo">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="editarProfesor()">Aceptar</button>
+                    </div>
+                </div>
+            </div><!--hacer un combo para seleccionar un profesor y de este recuperar el objeto para obtener el id-->
+        </div>
+        <script src="CSS/bootstrap.js"></script>
+    </body>
+</html>
