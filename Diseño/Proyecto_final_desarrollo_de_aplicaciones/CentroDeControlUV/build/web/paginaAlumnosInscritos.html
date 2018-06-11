@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="CSS/bootstrap.css"/>
+        <script src="CSS/bootstrap.js"></script>
+        <script src="CSS/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" href="CSS/estilos.css"/>
+        <title>Alumnos inscritos</title>
+    </head>
+    <body onload="cargarDatos()">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="paginaPrincipal()">Inicio</a>
+                </li>
+                <script>
+            function paginaPrincipal() {
+                location.href = "PaginaPrincipal.html?var=" + getId() + "&var2=" + var2();
+            }
+        </script>
+            </ul>
+        </nav>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-11">
+                    <h4 style="text-align: center" class="display-4">Alumnos inscritos por curso<br></h4>
+                    <div><br><br></div>
+                </div>
+                <select class="form-control" onchange="obtenerCurso(this.options[this.selectedIndex].text)" id="comboCursos"></select>
+                <div><br><br></div>
+            </div>
+            <table id="tablaAlumnos" class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Matricula</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            var idUsuario = 0;
+            function getId() {
+                var url = document.location.href;
+                if (url.indexOf('?') > 0) {
+                    var getString = url.split('?')[1];
+                    var GET = getString.split('&');
+                    var tmp = GET[0].split('=');
+                    var id = unescape(decodeURI(tmp[1]));
+                    var auxiliarId = unescape(decodeURI(GET[1]));
+                    idUsuario = auxiliarId.split('=')[1];
+
+                    console.log(idUsuario);
+                }
+                console.log(id);
+                return id;
+            }
+            function var2(){
+                return idUsuario;
+            }
+            var cursoSolicitado = null;
+            function obtenerCurso(idCurso) {
+                $.ajax({
+                    async: false,
+                    url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.curso/cursoSolo/' + idCurso,
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data, textStatus, jqXHR) {
+                        cursoSolicitado = data;
+                        obtenerAlumnos();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error al cargar los datos");
+                    }
+                });
+            }//obtener los alumnos de ese curso
+            function obtenerAlumnos() {
+                $("#tablaAlumnos tbody").find('tr')
+                        .remove()
+                        .end();
+                var x = cursoSolicitado['idCurso'];
+                $.ajax({
+
+                    url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.inscripcion/inscripciones/' + x,
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+
+                    success: function (data, textStatus, jqXHR) {
+                        $.each(data, function (i, inscripcion) {
+                            var alumno = inscripcion['idAlumno'];
+                            cadHTML = "<tr>";
+                            cadHTML += "<td>" + alumno["nombre"] + "</td>";
+                            cadHTML += "<td>" + alumno["correo"] + "</td>";
+                            cadHTML += "<td>" + alumno["matricula"] + "</td>";
+                            cadHTML += "<td><button type='button' class='btn btn-success' onclick='#'>editar</button></td>";
+                            cadHTML += "<td><button type='button' class='btn btn-danger' onclick='#'>eliminar</button></td>";
+                            cadHTML += "</tr>";
+                            $("#tablaAlumnos").append(cadHTML);
+
+
+
+                            console.log(alumno);
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error al cargar los datos");
+                    }
+                });
+            }
+            function cargarDatos() {
+                $("#comboCursos").find('option')
+                        .remove()
+                        .end();
+                $.ajax({
+                    url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.curso',
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data, textStatus, jqXHR) {
+                        cadHTML = "<option>Cursos existentes</option>";
+                        $("#comboCursos").append(cadHTML);
+                        $.each(data, function (i, curso) {
+                            cadHTML = "<option>" + curso['nombre'] + "</option>";
+                            $("#comboCursos").append(cadHTML);
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error al cargar los datos");
+                    }
+                });
+            }
+        </script>
+        <script src="CSS/bootstrap.js"></script>
+    </body>
+</html>
