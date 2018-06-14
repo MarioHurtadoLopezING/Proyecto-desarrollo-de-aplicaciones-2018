@@ -1,5 +1,6 @@
 package com.nemesis.centrodecontroluvandroid;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -95,7 +96,16 @@ public class RegistrarActividadActivity extends AppCompatActivity {
         new BuscarAlumnoTask(this.alummno,this).execute();
     }
     public void registroGuardado(){
-        Toast.makeText(this,"Actividad registrada exitosamente",Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Actividad registrada exitosamente")
+            .setPositiveButton("Aceptar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
     private JSONObject jsonAlumno;
     private JSONObject jsonCurso;
@@ -134,7 +144,7 @@ class GuardarAlumnosTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
-            String url = "http://192.168.100.7:8080/AccesoBD2018/webresources/modelo.registroactividad";
+            String url = "http://127.0.0.1:8080/AccesoBD2018/webresources/modelo.registroactividad";
             String metodoEnvio = "POST";
 
             URL ourl = new URL(url);
@@ -196,7 +206,7 @@ class BuscarCursoTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        String url = "http://192.168.100.7:8080/AccesoBD2018/webresources/modelo.curso/"+curso.getIdCurso();
+        String url = "http://127.0.0.1:8080/AccesoBD2018/webresources/modelo.curso/"+curso.getIdCurso();
         try {
             URL ourl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) ourl.openConnection();
@@ -241,7 +251,7 @@ class BuscarAlumnoTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        String url = "http://192.168.100.7:8080/AccesoBD2018/webresources/modelo.alumno/"+alumno.getIdAlumno();
+        String url = "http://127.0.0.1:8080/AccesoBD2018/webresources/modelo.alumno/"+alumno.getIdAlumno();
         try {
             URL ourl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) ourl.openConnection();
@@ -286,7 +296,7 @@ class BuscarActividadTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        String url = "http://192.168.100.7:8080/AccesoBD2018/webresources/modelo.actividad/"+actividad.getIdActividad();
+        String url = "http://127.0.0.1:8080/AccesoBD2018/webresources/modelo.actividad/"+actividad.getIdActividad();
         try {
             URL ourl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) ourl.openConnection();

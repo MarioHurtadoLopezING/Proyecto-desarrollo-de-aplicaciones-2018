@@ -1,7 +1,9 @@
 package com.nemesis.centrodecontroluvandroid;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -65,7 +67,16 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("usuario",usuario);
             startActivity(intent);
         }else{
-            Toast.makeText(this, "usuario/contraseña incorrectos", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Usuario/ contraseña incorrectos")
+            .setPositiveButton("Aceptar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
 }
@@ -81,7 +92,7 @@ class IniciciarSesionTask extends AsyncTask<Void, Void, Boolean>{
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        String url = "http://192.168.100.7:8080/AccesoBD2018/webresources/modelo.usuario/login/"+usuario.getUsuario()+"/"+usuario.getContrasena();
+        String url = "http://127.0.0.1:8080/AccesoBD2018/webresources/modelo.usuario/login/"+usuario.getUsuario()+"/"+usuario.getContrasena();
         try {
             URL ourl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) ourl.openConnection();

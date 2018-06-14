@@ -3,7 +3,9 @@
     package="com.nemesis.centrodecontroluvandroid">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="true"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,6 +29,7 @@
         <activity android:name=".actividadesalumnos.AlumnosProfesorActivity" />
         <activity android:name=".actividadesalumnos.ActividadesAlumnoActivity" />
         <activity android:name=".registroasistencias.RegistroAsistenciasActivity" />
+        <activity android:name=".VentanaRegistrarAsistenciaAlumnoActivity"></activity>
     </application>
 
 </manifest>

@@ -6,7 +6,6 @@
 package Modelo;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,8 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -41,9 +39,9 @@ public class Asistencia implements Serializable {
     @Basic(optional = false)
     @Column(name = "idAsistencia")
     private Integer idAsistencia;
+    @Size(max = 100)
     @Column(name = "fecha")
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    private String fecha;
     @JoinColumn(name = "idCurso", referencedColumnName = "idCurso")
     @ManyToOne
     private Curso idCurso;
@@ -66,11 +64,11 @@ public class Asistencia implements Serializable {
         this.idAsistencia = idAsistencia;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 

@@ -6,7 +6,6 @@
 package Modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -18,13 +17,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -68,8 +65,6 @@ public class Actividad implements Serializable {
     @Size(max = 20)
     @Column(name = "porcentaje")
     private String porcentaje;
-    @OneToMany(mappedBy = "idRegistro")
-    private Collection<Registroactividad> registroactividadCollection;
     @JoinColumn(name = "idCurso", referencedColumnName = "idCurso")
     @ManyToOne
     private Curso idCurso;
@@ -137,15 +132,6 @@ public class Actividad implements Serializable {
         this.porcentaje = porcentaje;
     }
 
-    @XmlTransient
-    public Collection<Registroactividad> getRegistroactividadCollection() {
-        return registroactividadCollection;
-    }
-
-    public void setRegistroactividadCollection(Collection<Registroactividad> registroactividadCollection) {
-        this.registroactividadCollection = registroactividadCollection;
-    }
-
     public Curso getIdCurso() {
         return idCurso;
     }
@@ -178,5 +164,5 @@ public class Actividad implements Serializable {
     public String toString() {
         return "Modelo.Actividad[ idActividad=" + idActividad + " ]";
     }
-
+    
 }

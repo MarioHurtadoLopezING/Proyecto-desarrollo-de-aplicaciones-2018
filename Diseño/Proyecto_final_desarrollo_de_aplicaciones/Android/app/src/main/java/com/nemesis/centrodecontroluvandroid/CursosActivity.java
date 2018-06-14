@@ -75,7 +75,7 @@ class BuscarCursosTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        String url = "http://192.168.100.7:8080/AccesoBD2018/webresources/modelo.curso/cursosProfesor/"+usuario.getProfesor().getIdUsuario();
+        String url = "http://127.0.0.1:8080/AccesoBD2018/webresources/modelo.curso/cursosProfesor/"+usuario.getProfesor().getIdUsuario();
         try {
             URL ourl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) ourl.openConnection();

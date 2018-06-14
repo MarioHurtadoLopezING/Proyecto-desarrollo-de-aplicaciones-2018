@@ -1,5 +1,6 @@
 package com.nemesis.centrodecontroluvandroid.registroasistencias;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,10 +8,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nemesis.centrodecontroluvandroid.CursosActivity;
 import com.nemesis.centrodecontroluvandroid.CursosAdapter;
 import com.nemesis.centrodecontroluvandroid.R;
+import com.nemesis.centrodecontroluvandroid.VentanaRegistrarAsistenciaAlumnoActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +61,10 @@ public class RegistroAsistenciasActivity extends AppCompatActivity {
         });
     }
     public void mostrarAlumnos(View view, Curso curso){
-        
+        //Toast.makeText(getApplicationContext(),"click en "+curso.getNombre(),Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, VentanaRegistrarAsistenciaAlumnoActivity.class);
+        intent.putExtra("curso",curso);
+        startActivity(intent);
     }
 }
 class BuscarCursosTask extends AsyncTask<Void, Void, Boolean> {
@@ -73,7 +79,7 @@ class BuscarCursosTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        String url = "http://192.168.100.7:8080/AccesoBD2018/webresources/modelo.curso/cursosProfesor/"+profesor.getIdUsuario();
+        String url = "http://127.0.0.1:8080/AccesoBD2018/webresources/modelo.curso/cursosProfesor/"+profesor.getIdUsuario();
         try {
             URL ourl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) ourl.openConnection();

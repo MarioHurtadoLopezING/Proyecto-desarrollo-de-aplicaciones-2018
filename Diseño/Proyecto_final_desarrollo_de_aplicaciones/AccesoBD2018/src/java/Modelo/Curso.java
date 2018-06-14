@@ -38,6 +38,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Curso.findByIdProfesor", query = "SELECT c FROM Curso c WHERE c.idProfesor.idProfesor = :idProfesor")})
 public class Curso implements Serializable {
 
+    @OneToMany(mappedBy = "idCurso")
+    private Collection<Asistencia> asistenciaCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -138,6 +141,15 @@ public class Curso implements Serializable {
     @Override
     public String toString() {
         return "Modelo.Curso[ idCurso=" + idCurso + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Asistencia> getAsistenciaCollection() {
+        return asistenciaCollection;
+    }
+
+    public void setAsistenciaCollection(Collection<Asistencia> asistenciaCollection) {
+        this.asistenciaCollection = asistenciaCollection;
     }
 
 }

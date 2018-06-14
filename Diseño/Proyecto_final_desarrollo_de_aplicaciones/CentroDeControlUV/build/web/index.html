@@ -42,7 +42,11 @@
                                                 <input type="password" class="form-control" id="txtContrasena" placeholder="Contraseña">
                                             </div>
                                             <button type="button" class="btn btn-primary" onclick="iniciarSesion();">iniciar sesión</button>
+                                            <button type="button" class="btn btn-success" onclick="registrarse();">Registrarse</button>
                                             <script>
+                                                function registrarse() {
+                                                    $("#ventanaRegistrarse").modal("show");
+                                                }
                                                 function iniciarSesion() {
                                                     var usuario = document.getElementById("txtUsuario").value;
                                                     var contrasena = document.getElementById("txtContrasena").value;
@@ -58,14 +62,63 @@
                                                             var id = data["idUsuario"];
                                                             var foranea = data["idProfesor"];
                                                             var nombre = foranea["idProfesor"];
-                                                            location.href = "PaginaPrincipal.html?var=" + nombre+"&"+"var2="+id;
+                                                            location.href = "PaginaPrincipal.html?var=" + nombre + "&" + "var2=" + id;
                                                         },
                                                         error: function (jqXHR, textStatus, errorThrown) {
                                                             $("#exampleModal").modal("show");
                                                         }
                                                     });
                                                 }
+                                                function registrarUsuario() {
+                                                    var nombre = document.getElementById("txtNombre").value;
+                                                    var correo = document.getElementById("txtCorreo").value;
+                                                    var data = {"idProfesor": 0, "nombre": nombre, "correo": correo};
+                                                    $.ajax({
+                                                        url: 'http://localhost:8080/AccesoBD2018/webresources/modelo.profesor',
+                                                        type: 'POST',
+                                                        data: JSON.stringify(data),
+                                                        cache: false,
+                                                        dataType: 'json',
+                                                        processData: false,
+                                                        contentType: 'application/json',
+                                                        success: function (data, textStatus, jqXHR) {
+                                                            alert("Nuevo profesor creado");
+                                                            $("#ventanaModificarProfesor").modal("hide");
+                                                        },
+                                                        error: function (jqXHR, textStatus, errorThrown) {
+                                                            console.log('ERRORS: ' + textStatus + " - " + errorThrown);
+                                                        }
+                                                    });
+                                                }
                                             </script>
+                                            <div class="modal fade" id="ventanaRegistrarse" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Agregar cuenta</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form>
+                                                                <div class="form-group">
+                                                                    <label for="recipient-name" class="col-form-label">Nombre:</label>
+                                                                    <input type="text" class="form-control" id="txtNombre">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="recipient-name" class="col-form-label">Correo:</label>
+                                                                    <input type="text" class="form-control" id="txtCorreo">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                            <button type="button" class="btn btn-primary" onclick="registrarUsuario()">Aceptar</button>
+                                                        </div>
+                                                    </div>
+                                                </div><!--hacer un combo para seleccionar un profesor y de este recuperar el objeto para obtener el id-->
+                                            </div>
                                             <!-- Button trigger modal -->
                                             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
